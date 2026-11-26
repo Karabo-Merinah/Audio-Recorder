@@ -38,6 +38,11 @@ export default function Recording() {
     //monitor the current state of recording 
     const recorderState = useAudioRecorderState(audioRecorder)
 
+    const getTime = (milliseconds: number) => {
+        //gets the time in hour ,minute and seconds 
+        return new Date(milliseconds).toISOString().slice(11, 19)
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
