@@ -1,6 +1,7 @@
+import { Link } from "expo-router"
 import { Home, Mic, Settings } from "lucide-react-native"
-import { Pressable, StyleSheet, View } from "react-native"
 import { useState } from "react"
+import { Pressable, StyleSheet, View } from "react-native"
 
 export const BottomNavigation = () => {
 
@@ -15,7 +16,8 @@ export const BottomNavigation = () => {
                 <Pressable style={[styles.button, active === "Audio" && styles.active]} onPress={() => setActive("Audio")} >
                     <Mic color={active === "Audio" ? "#FFFFFF" : "#000000"} size={20} />
                 </Pressable>
-                <Pressable style={[styles.button, active === "Settings" && styles.active]} onPress={() => setActive("Settings")} >
+                <Link href='../bottomNavigation'/>            
+                 <Pressable style={[styles.button, active === "Settings" && styles.active]} onPress={() => setActive("Settings")} >
                     <Settings color={active === "Settings" ? "#FFFFFF" : "#000000"} size={20} />
                 </Pressable>
             </View>
