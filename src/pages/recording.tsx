@@ -1,11 +1,14 @@
-import { AudioModule, useAudioRecorder, useAudioRecorderState, RecordingPresets, setAudioModeAsync } from "expo-audio"
+import { AudioModule, RecordingPresets, setAudioModeAsync, useAudioRecorder, useAudioRecorderState } from "expo-audio"
 import { router } from "expo-router"
-import { AudioLines, Mic, XIcon, Square } from "lucide-react-native"
+import { AudioLines, Mic, Square, XIcon, Play, Pause } from "lucide-react-native"
+import { useState } from "react"
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
+
 export default function Recording() {
 
+    const [isPaused, setIsPaused] = useState(false)
     //request microphone permission and start recording
     const startRecording = async () => {
         //request permission to access the device microphone
@@ -29,6 +32,7 @@ export default function Recording() {
     //stop the current audio recording
     const stopRecord = async () => {
         await audioRecorder.stop()
+        setIsPaused(false)
         console.log("Recording stopped")
         //displays the recorder audio file location
         console.log(audioRecorder.uri)
@@ -43,6 +47,18 @@ export default function Recording() {
         return new Date(milliseconds).toISOString().slice(11, 19)
     }
 
+    //pause the current recording
+    const pauseRecording = () => {
+        audioRecorder.pause()
+        setIsPaused(true)
+    }
+    //continue with the audio after pausing 
+    const resumeRecording = () => {
+        audioRecorder.record()
+        setIsPaused(false)
+    }
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
@@ -53,13 +69,24 @@ export default function Recording() {
                 <View style={styles.space} />
             </View>
             <View style={styles.audio}>
-                <Text style={styles.instruction}>{recorderState.isRecording ? "Recording..." : "Ready to record"} </Text>
+                <Text style={styles.instruction}>{isPaused ? "Recording paused " : recorderState.isRecording ? "Recording..." : "Ready to record"} </Text>
                 <Text style={styles.timer}>00:00:00</Text>
                 <AudioLines size={120} color={'#EF4C1D'} />
-                <Pressable style={styles.record} onPress={recorderState.isRecording ? stopRecord : startRecording} >
-                    {recorderState.isRecording ? <Square size={40} color={'#FFFFFF'} fill={'#FFFFFF'} /> : <Mic size={40} color={'#FFFFFF'} />}
-                </Pressable>
-                <Text style={styles.instruction}>{recorderState.isRecording ? "Tap to stop recording" : "Tap to start recording"}</Text>
+                <View style={styles.controls}>
+                    {/* display pause or resume button during an active recording */}
+                    {(recorderState.isRecording || isPaused) && (
+                        <Pressable style={styles.pauseButton} onPress={isPaused ? resumeRecording : pauseRecording}>
+                            {isPaused ? <Play size={24} color={'#000000'} /> : <Pause size={24} color={'#000000'} />}
+                        </Pressable>
+                    )}
+
+                    {/* Start or stop recording */}
+                    <Pressable style={styles.record} onPress={recorderState.isRecording || isPaused ? stopRecord : startRecording}>
+                        {recorderState.isRecording || isPaused ? <Square size={40} color={'#FFFFFF'} fill={'#FFFFFF'} /> : <Mic size={40} color={'#FFFFFF'} />}
+                    </Pressable>
+                </View>
+                <Text style={styles.instruction}> {recorderState.isRecording || isPaused ? "Tap to stop recording" : "Tap to start recording"}
+                </Text>
             </View>
 
         </SafeAreaView>
@@ -118,5 +145,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#EF4C1D',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    controls: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 20
+    },
+    pauseButton: {
+        borderRadius: 50,
+        width: 50,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#F4F4F4'
     }
 })
