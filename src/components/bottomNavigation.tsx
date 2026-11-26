@@ -4,8 +4,6 @@ import { useState } from "react"
 import { Pressable, StyleSheet, View } from "react-native"
 
 export const BottomNavigation = () => {
-
-    // Track the active navigation button
     const [active, setActive] = useState("Home")
 
     return (

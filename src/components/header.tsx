@@ -5,7 +5,7 @@ export const Header = () => {
     return (
         <View style={styles.topBar}>
             <View style={styles.logo}>
-                <AudioWaveform color="#EF4C1D" size={30} /><AudioWaveform color="#EF4C1D" size={30} />
+                <AudioWaveform color="#EF4C1D" size={30} />
                 <Text style={styles.title}>Audio Journal</Text>
             </View>
             <View style={styles.buttons}>
