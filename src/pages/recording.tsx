@@ -1,19 +1,42 @@
-import { AudioModule } from "expo-audio"
+import { AudioModule, useAudioRecorder, useAudioRecorderState, RecordingPresets, setAudioModeAsync } from "expo-audio"
 import { router } from "expo-router"
-import { AudioLines, Mic, XIcon } from "lucide-react-native"
+import { AudioLines, Mic, XIcon, Square } from "lucide-react-native"
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 
 export default function Recording() {
 
-    const requestAudioPermission=async ()=>{
-        const permission=await AudioModule.requestRecordingPermissionsAsync()
-       
-        if(!permission.granted){
-            Alert.alert("Permission denied","Please allow microphone access")
+    //request microphone permission and start recording
+    const startRecording = async () => {
+        //request permission to access the device microphone
+        const permission = await AudioModule.requestRecordingPermissionsAsync()
+        //check if microphone permission was denied 
+        if (!permission.granted) {
+            Alert.alert("Permission denied", "Please allow microphone access")
             return
         }
+        //configure the audio session to allow recording
+        await setAudioModeAsync({
+            allowsRecording: true, playsInSilentMode: true
+        })
+        //prepare the audio recorder before recording
+        await audioRecorder.prepareToRecordAsync()
+        //start recording audio
+        audioRecorder.record()
+        console.log("Recording started")
     }
+
+    //stop the current audio recording
+    const stopRecord = async () => {
+        await audioRecorder.stop()
+        console.log("Recording stopped")
+        //displays the recorder audio file location
+        console.log(audioRecorder.uri)
+    }
+    //creates audio recorder and configure the recording quality 
+    const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY)
+    //monitor the current state of recording 
+    const recorderState = useAudioRecorderState(audioRecorder)
 
     return (
         <SafeAreaView style={styles.container}>
@@ -25,13 +48,13 @@ export default function Recording() {
                 <View style={styles.space} />
             </View>
             <View style={styles.audio}>
-                <Text style={styles.instruction}>Ready to record </Text>
+                <Text style={styles.instruction}>{recorderState.isRecording ? "Recording..." : "Ready to record"} </Text>
                 <Text style={styles.timer}>00:00:00</Text>
                 <AudioLines size={120} color={'#EF4C1D'} />
-                <Pressable style={styles.record} onPress={requestAudioPermission}>
-                    <Mic size={40} color={'#FFFFFF'} />
+                <Pressable style={styles.record} onPress={recorderState.isRecording ? stopRecord : startRecording} >
+                    {recorderState.isRecording ? <Square size={40} color={'#FFFFFF'} fill={'#FFFFFF'} /> : <Mic size={40} color={'#FFFFFF'} />}
                 </Pressable>
-                <Text style={styles.instruction}>Tap to start recording</Text>
+                <Text style={styles.instruction}>{recorderState.isRecording ? "Tap to stop recording" : "Tap to start recording"}</Text>
             </View>
 
         </SafeAreaView>
@@ -70,25 +93,25 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: 25,
         flex: 1,
-        backgroundColor:'#FDFDFD',
-        marginBottom:10,
-        borderRadius:9
+        backgroundColor: '#FDFDFD',
+        marginBottom: 10,
+        borderRadius: 9
 
     },
     instruction: {
         fontSize: 15,
         color: '#717171'
     },
-    timer:{
-        fontSize:40,
-        fontWeight:'bold'
+    timer: {
+        fontSize: 40,
+        fontWeight: 'bold'
     },
-    record:{
-        borderRadius:50,
-        width:80,
-        height:80,
-        backgroundColor:'#EF4C1D',
-        alignItems:'center',
-       justifyContent:'center'
+    record: {
+        borderRadius: 50,
+        width: 80,
+        height: 80,
+        backgroundColor: '#EF4C1D',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })
