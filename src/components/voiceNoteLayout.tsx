@@ -1,7 +1,9 @@
 import { type Voice } from "@/types/voice"
-import { AudioLines, MoreVertical, Play } from "lucide-react-native"
-import { Pressable, StyleSheet, Text, View, Alert, TextInput, Modal } from "react-native"
+import { setAudioModeAsync, useAudioPlayer, useAudioPlayerStatus } from "expo-audio"
+import { AudioLines, MoreVertical, Pause, Play } from "lucide-react-native"
 import { useState } from "react"
+import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native"
+
 
 export const VoiceNoteLayout = ({ voice, onDelete, onRename }: { voice: Voice, onDelete: () => void, onRename: (name: string) => void }) => {
 
@@ -22,6 +24,11 @@ export const VoiceNoteLayout = ({ voice, onDelete, onRename }: { voice: Voice, o
         ])
     }
 
+    // load the saved audio file
+    const player = useAudioPlayer(voice.filepath)
+    // monitor the playback status
+    const playerStatus = useAudioPlayerStatus(player)
+
     // confirmation dialog  before deleting the recording
     const confirmDelete = () => {
         Alert.alert("Delete recording", "Are you sure you want to delete this recording?",
@@ -30,6 +37,34 @@ export const VoiceNoteLayout = ({ voice, onDelete, onRename }: { voice: Voice, o
             ]
         )
     }
+
+    // play or pause the recording
+    const playRecording = async () => {
+        try {
+            // pause if the recording is already playing
+            if (playerStatus.playing) {
+                player.pause()
+            } else {
+                // configure the audio mode for playback
+                await setAudioModeAsync({
+                    allowsRecording: false,
+                    playsInSilentMode: true
+                })
+                // restart if the audio has finished playing
+                if (playerStatus.didJustFinish ||
+                    player.currentTime >= player.duration) {
+                    await player.seekTo(0)
+                }
+                // play the recording
+                player.play()
+            }
+        } catch (error) {
+            console.log(error)
+            Alert.alert("Error", "Failed to play recording")
+        }
+    }
+
+
     // validate and save the recording name
     const saveName = () => {
         if (!name.trim()) {
@@ -39,6 +74,12 @@ export const VoiceNoteLayout = ({ voice, onDelete, onRename }: { voice: Voice, o
         onRename(name.trim())
         setShowRenameForm(false)
     }
+
+    // convert playback seconds into hours, minutes and seconds
+    const getTime = (seconds: number) => {
+        return new Date(seconds * 1000).toISOString().slice(11, 19)
+    }
+
     return (
         <View style={styles.border}>
             <View style={styles.firstRow}>
@@ -53,9 +94,11 @@ export const VoiceNoteLayout = ({ voice, onDelete, onRename }: { voice: Voice, o
             <Text style={styles.date}>{voice.date}</Text>
             <View style={styles.separator}></View>
             <View style={styles.time_play}>
-                <Text style={styles.duration}>{voice.duration}</Text>
-                <Pressable onPress={() => console.log('Press play button')}>
-                    <Play size={16} color={'#717171'} />
+                <Text style={styles.duration}>{getTime(playerStatus.currentTime)} / {voice.duration}</Text>
+                <Pressable style={styles.button} onPress={playRecording}>
+                    {playerStatus.playing ? (<Pause size={20} color={'#717171'} />
+                    ) : (<Play size={20} color={'#717171'} />
+                    )}
                 </Pressable>
             </View>
             <Modal visible={showRenameForm} transparent onRequestClose={() => setShowRenameForm(false)}>
@@ -70,7 +113,6 @@ export const VoiceNoteLayout = ({ voice, onDelete, onRename }: { voice: Voice, o
                             <Pressable style={styles.saveButton} onPress={saveName}>
                                 <Text style={styles.saveText}>Save</Text>
                             </Pressable>
-
                         </View>
                     </View>
                 </View>

@@ -61,7 +61,7 @@ export default function Recording() {
             return
         }
 
-        router.replace('./home')
+        router.replace('/')
     }
     //creates audio recorder and configure the recording quality 
     const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY)

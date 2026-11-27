@@ -3,11 +3,11 @@ import { Header } from "@/components/header"
 import { VoiceNoteLayout } from "@/components/voiceNoteLayout"
 import { type Voice } from "@/types/voice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { File } from "expo-file-system"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useState } from "react"
-import { FlatList, StyleSheet, Text, View,Alert } from "react-native"
+import { Alert, FlatList, StyleSheet, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
-import {File} from "expo-file-system"
 
 
 export default function Home() {
@@ -81,6 +81,9 @@ const renameRecording = async (id: number, name: string) => {
         <FlatList data={recordings} keyExtractor={(item) => item.id.toString()} renderItem={({item})=>(
           <VoiceNoteLayout voice={item} onDelete={()=>deleteRecording(item)} onRename={(name)=>renameRecording(item.id,name)}/>
         )}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+        overScrollMode="never"
         />
       </View>
       <BottomNavigation />
