@@ -5,8 +5,10 @@ import { type Voice } from "@/types/voice"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useFocusEffect } from "expo-router"
 import { useCallback, useState } from "react"
-import { FlatList, StyleSheet, Text, View } from "react-native"
+import { FlatList, StyleSheet, Text, View,Alert } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+import {File} from "expo-file-system"
+
 
 export default function Home() {
 
@@ -19,6 +21,46 @@ export default function Home() {
     setRecordings(JSON.parse(data || "[]"))
   }
 
+  // delete the recording and its audio file
+const deleteRecording = async (voice: Voice) => {
+    try {
+        // remove the recording from the list
+        const updatedRecordings = recordings.filter(item => item.id !== voice.id )
+        // Save the updated list
+        await AsyncStorage.setItem("recordings", JSON.stringify(updatedRecordings))
+        // update the displayed recordings
+        setRecordings(updatedRecordings)
+        // delete the actual audio file
+        const file = new File(voice.filepath)
+        if (file.exists) {
+            file.delete()
+        }
+        Alert.alert("Success", "Recording deleted successfully")
+
+    } catch (error) {
+        console.log(error)
+        Alert.alert("Error", "Failed to complete deletion")
+    }
+}
+
+// update the recording name
+const renameRecording = async (id: number, name: string) => {
+    try {
+        //update the name of the selected recording
+        const updatedRecordings = recordings.map(item => item.id === id ? { ...item, name } : item
+        )
+        // save the updated recordings
+        await AsyncStorage.setItem("recordings", JSON.stringify(updatedRecordings)
+        )
+        // update the displayed recordings
+        setRecordings(updatedRecordings)
+        Alert.alert("Success", "Recording renamed successfully")
+
+    } catch (error) {
+        console.log(error)
+        Alert.alert("Error", "Failed to rename recording")
+    }
+}
   // refresh recordings whenever the home page mounts
   useFocusEffect(
     useCallback(() => {
