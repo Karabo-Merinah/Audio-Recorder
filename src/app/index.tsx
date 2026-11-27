@@ -78,7 +78,9 @@ const renameRecording = async (id: number, name: string) => {
           <Text style={styles.count}> {recordings.length} recordings </Text>
         </View>
         {/* display all saved recordings */}
-        <FlatList data={recordings} keyExtractor={(item) => item.id.toString()} renderItem={({ item }) => <VoiceNoteLayout {...item} />}
+        <FlatList data={recordings} keyExtractor={(item) => item.id.toString()} renderItem={({item})=>(
+          <VoiceNoteLayout voice={item} onDelete={()=>deleteRecording(item)} onRename={(name)=>renameRecording(item.id,name)}/>
+        )}
         />
       </View>
       <BottomNavigation />
