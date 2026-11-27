@@ -131,8 +131,6 @@ export default function Recording() {
                             {isPaused ? <Play size={24} color={'#000000'} /> : <Pause size={24} color={'#000000'} />}
                         </Pressable>
                     )}
-
-                    {/* Start or stop recording */}
                     <Pressable style={styles.record} onPress={recorderState.isRecording || isPaused ? stopRecord : startRecording}>
                         {recorderState.isRecording || isPaused ? <Square size={40} color={'#FFFFFF'} fill={'#FFFFFF'} /> : <Mic size={40} color={'#FFFFFF'} />}
                     </Pressable>
@@ -147,8 +145,9 @@ export default function Recording() {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 15,
-        flex: 1
+        backgroundColor: '#FFFFFF'
     },
     header: {
         flexDirection: 'row',
@@ -160,9 +159,9 @@ const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 50,
-        alignItems: 'center',
+        backgroundColor: '#F4F4F4',
         justifyContent: 'center',
-        backgroundColor: '#FDFDFD'
+        alignItems: 'center'
     },
     heading: {
         textAlign: 'center',
@@ -173,14 +172,10 @@ const styles = StyleSheet.create({
         width: 40
     },
     audio: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 25,
-        flex: 1,
-        backgroundColor: '#FDFDFD',
-        marginBottom: 10,
-        borderRadius: 9
-
+        gap: 25
     },
     instruction: {
         fontSize: 15,

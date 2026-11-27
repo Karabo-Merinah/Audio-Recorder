@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    marginTop: 20
+    marginTop: 20,
+    paddingBottom: 90
   },
   heading: {
     flexDirection: 'row',
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
   illustration: {
     width: 220,
     height: 220,
-    borderRadius:9
+    borderRadius: 9
   },
   emptyTitle: {
     fontSize: 18,

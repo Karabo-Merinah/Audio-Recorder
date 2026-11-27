@@ -1,30 +1,25 @@
-import { router } from "expo-router"
+import { router, usePathname } from "expo-router"
 import { Home, Mic, Settings } from "lucide-react-native"
-import { useState } from "react"
 import { Pressable, StyleSheet, View } from "react-native"
 
 export const BottomNavigation = () => {
-    const [active, setActive] = useState("Home")
+
+    const pathname = usePathname()
+
+    const active = pathname === "/" ? "Home" : pathname === "/recording" ? "Audio" : "Settings"
 
     return (
         <View style={styles.container}>
             <View style={styles.buttons}>
-                <Pressable style={[styles.button, active === "Home" && styles.active]} onPress={() => {
-                    setActive("Home")
-                    router.navigate("/")
-                }}>
-                    <Home color={active === "Home" ? "#FFFFFF" : "#000000"} size={20} />
+                <Pressable style={[styles.button, active === "Home" && styles.active]} onPress={() => router.navigate("/")} >
+                    <Home size={22} color={active === "Home" ? "#FFFFFF" : "#000000"} />
                 </Pressable>
-                <Pressable style={[styles.button, active === "Audio" && styles.active]} onPress={() => {
-                    setActive("Audio")
-                    router.push('/recording')
-                }} >
-                    <Mic color={active === "Audio" ? "#FFFFFF" : "#000000"} size={20} />
+                <Pressable style={[styles.button, active === "Audio" && styles.active]} onPress={() => router.push("/recording")}>
+                    <Mic size={22} color={active === "Audio" ? "#FFFFFF" : "#000000"} />
                 </Pressable>
-                <Pressable style={[styles.button, active === "Settings" && styles.active]} onPress={() => setActive("Settings")} >
-                    <Settings color={active === "Settings" ? "#FFFFFF" : "#000000"} size={20} />
+                <Pressable style={[styles.button, active === "Settings" && styles.active]}>
+                    <Settings size={22} color={active === "Settings" ? "#FFFFFF" : "#000000"} />
                 </Pressable>
-
             </View>
         </View>
     )
@@ -32,26 +27,37 @@ export const BottomNavigation = () => {
 
 const styles = StyleSheet.create({
     container: {
-        borderWidth: 1,
-        borderRadius: 9,
-        borderColor: '#717171',
-        maxWidth: 700,
-        height: 50
+        position: 'absolute',
+        bottom: 25,
+        alignSelf: 'center',
+        width: 230,
+        height: 60,
+        borderRadius: 50,
+        backgroundColor: '#FFFFFF',
+        padding: 5,
+        elevation: 5,
+        shadowColor: '#000000',
+        shadowOffset: {
+            width: 0,
+            height: 4
+        },
+        shadowOpacity: 0.12,
+        shadowRadius: 10
     },
     buttons: {
-        flexDirection: 'row',
         flex: 1,
-        justifyContent: 'space-evenly',
+        flexDirection: 'row',
         alignItems: 'center'
     },
     button: {
-        width: 40,
-        height: 40,
+        flex: 1,
+        height: 50,
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center'
     },
     active: {
-        backgroundColor: '#000000'
+        flex: 2,
+        backgroundColor: '#222222'
     }
 })
