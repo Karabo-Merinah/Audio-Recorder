@@ -1,7 +1,7 @@
 import { AudioWaveform, PlusIcon, SearchIcon } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export const Header = () => {
+export const Header = ({onSearch}:{onSearch:()=>void}) => {
     return (
         <View style={styles.topBar}>
             <View style={styles.logo}>
@@ -9,7 +9,7 @@ export const Header = () => {
                 <Text style={styles.title}>Audio Journal</Text>
             </View>
             <View style={styles.buttons}>
-                <Pressable style={styles.button} onPress={() => console.log("Search")}><SearchIcon size={20} /></Pressable>
+                <Pressable style={styles.button} onPress={onSearch}><SearchIcon size={20} /></Pressable>
                 <Pressable style={styles.button} onPress={() => console.log("Add a new audio")} ><PlusIcon size={20} />
                 </Pressable>
             </View>

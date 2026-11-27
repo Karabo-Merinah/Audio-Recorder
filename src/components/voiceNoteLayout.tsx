@@ -51,8 +51,7 @@ export const VoiceNoteLayout = ({ voice, onDelete, onRename }: { voice: Voice, o
                     playsInSilentMode: true
                 })
                 // restart if the audio has finished playing
-                if (playerStatus.didJustFinish ||
-                    player.currentTime >= player.duration) {
+                if (playerStatus.didJustFinish || player.currentTime >= player.duration) {
                     await player.seekTo(0)
                 }
                 // play the recording
