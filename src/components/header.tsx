@@ -1,5 +1,7 @@
+import { router } from "expo-router";
 import { AudioWaveform, PlusIcon, SearchIcon } from "lucide-react-native";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+
 
 export const Header = ({onSearch}:{onSearch:()=>void}) => {
     return (
@@ -10,7 +12,7 @@ export const Header = ({onSearch}:{onSearch:()=>void}) => {
             </View>
             <View style={styles.buttons}>
                 <Pressable style={styles.button} onPress={onSearch}><SearchIcon size={20} /></Pressable>
-                <Pressable style={styles.button} onPress={() => console.log("Add a new audio")} ><PlusIcon size={20} />
+                <Pressable style={styles.button} onPress={()=>router.push("/recording")} ><PlusIcon size={20} />
                 </Pressable>
             </View>
 
