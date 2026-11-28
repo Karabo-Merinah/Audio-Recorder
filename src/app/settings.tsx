@@ -8,6 +8,9 @@ import { SafeAreaView } from "react-native-safe-area-context"
 export default function Settings() {
 
     const [showHelpInformation, setShowHelpInformation] = useState(false)
+    const [showPrivacyInformation, setShowPrivacyInformation] = useState(false)
+   
+   
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.heading}>Settings</Text>
@@ -39,7 +42,7 @@ export default function Settings() {
                 </View>
                 <Text style={styles.sectionTitle}>About</Text>
                 <View style={styles.section}>
-                    <Pressable style={styles.option}>
+                    <Pressable style={styles.option} onPress={()=>setShowPrivacyInformation(true)}>
                         <ShieldCheck size={22} color={'#EF4C1D'} />
                         <Text style={[styles.title, styles.optionText]}>Privacy</Text>
                         <ChevronRight size={20} color={'#717171'} />
@@ -85,6 +88,38 @@ export default function Settings() {
                 </View>
             </Modal>
             <BottomNavigation />
+
+<Modal visible={showPrivacyInformation} transparent={true}  animationType="fade"onRequestClose={() => setShowPrivacyInformation(false)}>
+    <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+                <ShieldCheck size={24} color={'#EF4C1D'} />
+                <Text style={styles.modalTitle}>Privacy</Text>
+                <Pressable onPress={() => setShowPrivacyInformation(false)}><X size={22} color={'#000000'} /> </Pressable>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                <Text style={styles.question}>Local storage</Text>
+                <Text style={styles.answer}>Your recordings are stored locally on your device. Audio Journal does not upload your recordings to a cloud server.
+                </Text>
+                <Text style={styles.question}>Microphone permissions</Text>
+                <Text style={styles.answer}> Microphone access is required to record audio.
+                    You can manage this permission in your device settings.
+                </Text>
+                <Text style={styles.question}>Offline access</Text>
+                <Text style={styles.answer}>You do not need an internet connection to create, play or manage your recordings.
+                </Text>
+                <Text style={styles.question}>Data management</Text>
+                <Text style={styles.answer}> You can rename or delete your saved recordings at any time. </Text>
+                <Text style={styles.question}>Data loss</Text>
+                <Text style={styles.answer}> Uninstalling the application or clearing its stored data may result in the loss of your recordings.</Text>
+            </ScrollView>
+            <Pressable style={styles.closeButton} onPress={() => setShowPrivacyInformation(false)} >
+                <Text style={styles.closeText}>Close</Text>
+            </Pressable>
+
+        </View>
+    </View>
+</Modal>
         </SafeAreaView>
     )
 }
@@ -92,7 +127,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 15,
-        backgroundColor: '#F4F4F4'
+        backgroundColor: '#FDFDFD'
     },
     heading: {
         fontSize: 24,
