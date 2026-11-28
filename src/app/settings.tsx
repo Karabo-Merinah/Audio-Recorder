@@ -9,8 +9,8 @@ export default function Settings() {
 
     const [showHelpInformation, setShowHelpInformation] = useState(false)
     const [showPrivacyInformation, setShowPrivacyInformation] = useState(false)
-   
-   
+    const [showAbout, setShowAbout] = useState(false)
+
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.heading}>Settings</Text>
@@ -42,13 +42,13 @@ export default function Settings() {
                 </View>
                 <Text style={styles.sectionTitle}>About</Text>
                 <View style={styles.section}>
-                    <Pressable style={styles.option} onPress={()=>setShowPrivacyInformation(true)}>
+                    <Pressable style={styles.option} onPress={() => setShowPrivacyInformation(true)}>
                         <ShieldCheck size={22} color={'#EF4C1D'} />
                         <Text style={[styles.title, styles.optionText]}>Privacy</Text>
                         <ChevronRight size={20} color={'#717171'} />
                     </Pressable>
                     <View style={styles.separator} />
-                    <Pressable style={styles.option}>
+                    <Pressable style={styles.option} onPress={() => setShowAbout(true)}>
                         <Info size={22} color={'#EF4C1D'} />
                         <Text style={[styles.title, styles.optionText]}> About Audio Journal</Text>
                         <ChevronRight size={20} color={'#717171'} />
@@ -87,39 +87,76 @@ export default function Settings() {
                     </View>
                 </View>
             </Modal>
+            <Modal visible={showPrivacyInformation} transparent={true} animationType="fade" onRequestClose={() => setShowPrivacyInformation(false)}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
+                            <ShieldCheck size={24} color={'#EF4C1D'} />
+                            <Text style={styles.modalTitle}>Privacy</Text>
+                            <Pressable onPress={() => setShowPrivacyInformation(false)}>
+                                <X size={22} color={'#000000'} />
+                            </Pressable>
+                        </View>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <Text style={styles.question}>Local storage</Text>
+                            <Text style={styles.answer}>Your recordings are stored locally on your device. Audio Journal does not upload your recordings to a cloud server.
+                            </Text>
+                            <Text style={styles.question}>Microphone permissions</Text>
+                            <Text style={styles.answer}> Microphone access is required to record audio.
+                                You can manage this permission in your device settings.
+                            </Text>
+                            <Text style={styles.question}>Offline access</Text>
+                            <Text style={styles.answer}>You do not need an internet connection to create, play or manage your recordings.
+                            </Text>
+                            <Text style={styles.question}>Data management</Text>
+                            <Text style={styles.answer}> You can rename or delete your saved recordings at any time. </Text>
+                            <Text style={styles.question}>Data loss</Text>
+                            <Text style={styles.answer}> Uninstalling the application or clearing its stored data may result in the loss of your recordings.</Text>
+                        </ScrollView>
+                        <Pressable style={styles.closeButton} onPress={() => setShowPrivacyInformation(false)} >
+                            <Text style={styles.closeText}>Close</Text>
+                        </Pressable>
+
+                    </View>
+                </View>
+            </Modal>
+            {/* About application modal */}
+            <Modal visible={showAbout} transparent={true} animationType="fade" onRequestClose={() => setShowAbout(false)}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalTitle}>About Audio Journal</Text>
+                            <Pressable onPress={() => setShowAbout(false)}>
+                                <X size={22} color={'#000000'} />
+                            </Pressable>
+                        </View>
+
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <View style={styles.aboutInfo}>
+                                <AudioLines size={55} color={'#EF4C1D'} />
+                                <Text style={styles.appName}>Audio Journal</Text>
+                                <Text style={styles.description}>Version 1.0.0</Text>
+                            </View>
+                            <Text style={styles.answer}> Audio Journal is a simple offline audio recording application designed to help users capture,
+                                organise and manage their voice recordings.
+                            </Text>
+                            <Text style={styles.question}>Key features</Text>
+                            <Text style={styles.feature}> Record, pause and resume audio</Text>
+                            <Text style={styles.feature}>Play saved recordings</Text>
+                            <Text style={styles.feature}>Rename and delete recordings</Text>
+                            <Text style={styles.feature}> Search recordings by name</Text>
+                            <Text style={styles.feature}>Offline audio storage</Text>
+                            <View style={styles.developerInfo}>
+                                <Text style={styles.description}>Developed using React Native, Expo and TypeScript. </Text>
+                            </View>
+                        </ScrollView>
+                        <Pressable style={styles.closeButton} onPress={() => setShowAbout(false)}>
+                            <Text style={styles.closeText}>Close</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
             <BottomNavigation />
-
-<Modal visible={showPrivacyInformation} transparent={true}  animationType="fade"onRequestClose={() => setShowPrivacyInformation(false)}>
-    <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-                <ShieldCheck size={24} color={'#EF4C1D'} />
-                <Text style={styles.modalTitle}>Privacy</Text>
-                <Pressable onPress={() => setShowPrivacyInformation(false)}><X size={22} color={'#000000'} /> </Pressable>
-            </View>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <Text style={styles.question}>Local storage</Text>
-                <Text style={styles.answer}>Your recordings are stored locally on your device. Audio Journal does not upload your recordings to a cloud server.
-                </Text>
-                <Text style={styles.question}>Microphone permissions</Text>
-                <Text style={styles.answer}> Microphone access is required to record audio.
-                    You can manage this permission in your device settings.
-                </Text>
-                <Text style={styles.question}>Offline access</Text>
-                <Text style={styles.answer}>You do not need an internet connection to create, play or manage your recordings.
-                </Text>
-                <Text style={styles.question}>Data management</Text>
-                <Text style={styles.answer}> You can rename or delete your saved recordings at any time. </Text>
-                <Text style={styles.question}>Data loss</Text>
-                <Text style={styles.answer}> Uninstalling the application or clearing its stored data may result in the loss of your recordings.</Text>
-            </ScrollView>
-            <Pressable style={styles.closeButton} onPress={() => setShowPrivacyInformation(false)} >
-                <Text style={styles.closeText}>Close</Text>
-            </Pressable>
-
-        </View>
-    </View>
-</Modal>
         </SafeAreaView>
     )
 }
@@ -186,7 +223,8 @@ const styles = StyleSheet.create({
     modalContainer: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'rgba(0,0,0,0.4)'
     },
     modalContent: {
         width: '90%',
@@ -230,5 +268,22 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 15,
         fontWeight: 'bold'
+    },
+    aboutInfo: {
+        alignItems: 'center',
+        gap: 8,
+        paddingVertical: 20
+    },
+    feature: {
+        fontSize: 14,
+        color: '#717171',
+        lineHeight: 24
+    },
+    developerInfo: {
+        borderTopWidth: 1,
+        borderColor: '#EEEEEE',
+        marginTop: 20,
+        paddingTop: 15,
+        alignItems: 'center'
     }
 })
