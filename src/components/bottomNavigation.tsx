@@ -17,7 +17,7 @@ export const BottomNavigation = () => {
                 <Pressable style={[styles.button, active === "Audio" && styles.active]} onPress={() => router.push("/recording")}>
                     <Mic size={22} color={active === "Audio" ? "#FFFFFF" : "#000000"} />
                 </Pressable>
-                <Pressable style={[styles.button, active === "Settings" && styles.active]}>
+                <Pressable style={[styles.button, active === "Settings" && styles.active]} onPress={()=>router.navigate("./settings")}>
                     <Settings size={22} color={active === "Settings" ? "#FFFFFF" : "#000000"} />
                 </Pressable>
             </View>
