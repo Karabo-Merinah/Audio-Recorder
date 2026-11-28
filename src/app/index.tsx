@@ -96,9 +96,9 @@ export default function Home() {
       <Header onSearch={toggleSearch} />
       {showSearch && (
         <View style={styles.searchContainer}>
-          <Search size={20} color={'#717171'} />
+          <Search size={20} color={'#717171'}/>
           <TextInput style={styles.searchInput} placeholder="Search recordings..." placeholderTextColor={'#717171'} value={searchTerm} onChangeText={setSearchTerm} autoFocus />
-          <Pressable onPress={toggleSearch}> <X size={20} color={'#717171'} /> </Pressable>
+          <Pressable onPress={toggleSearch}><X size={20} color={'#717171'}/></Pressable>
         </View>
       )}
 
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: '#F4F4F4'
+    backgroundColor: '#FDFDFD'
   },
   content: {
     flex: 1,

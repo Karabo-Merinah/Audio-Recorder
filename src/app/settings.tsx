@@ -1,14 +1,17 @@
 import { BottomNavigation } from "@/components/bottomNavigation"
-import {AudioLines,MessageSquare,Headphones,ShieldCheck,Info,ChevronRight} from "lucide-react-native"
-import { Pressable, StyleSheet, Text, View, ScrollView } from "react-native"
+import { AudioLines, ChevronRight, Headphones, Info, MessageSquare, ShieldCheck, X } from "lucide-react-native"
+import { useState } from "react"
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
+
 
 export default function Settings() {
 
+    const [showHelpInformation, setShowHelpInformation] = useState(false)
     return (
         <SafeAreaView style={styles.container}>
             <Text style={styles.heading}>Settings</Text>
-            <ScrollView showsVerticalScrollIndicator={false}  contentContainerStyle={styles.content}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
                 <View style={styles.appInfo}>
                     <AudioLines size={55} color={'#EF4C1D'} />
                     <Text style={styles.appName}>Audio Journal</Text>
@@ -25,7 +28,7 @@ export default function Settings() {
                         <ChevronRight size={20} color={'#717171'} />
                     </Pressable>
                     <View style={styles.separator} />
-                    <Pressable style={styles.option}>
+                    <Pressable style={styles.option} onPress={() => setShowHelpInformation(true)}>
                         <Headphones size={22} color={'#EF4C1D'} />
                         <View style={styles.optionText}>
                             <Text style={styles.title}>Help and support</Text>
@@ -49,6 +52,38 @@ export default function Settings() {
                     </Pressable>
                 </View>
             </ScrollView>
+
+            <Modal visible={showHelpInformation} transparent={true} animationType="fade" onRequestClose={() => setShowHelpInformation(false)}>
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
+                            <Headphones size={24} color={'#EF4C1D'} />
+                            <Text style={styles.modalTitle}>Help and Support</Text>
+                            <Pressable onPress={() => setShowHelpInformation(false)}>
+                                <X size={22} color={'#000000'} />
+                            </Pressable>
+                        </View>
+                        <ScrollView showsVerticalScrollIndicator={false}>
+                            <Text style={styles.question}>  How do I record audio? </Text>
+                            <Text style={styles.answer}> Tap the microphone or Add button, then tap the record button to start recording.
+                                Tap the stop button to save your recording.
+                            </Text>
+                            <Text style={styles.question}>How do I play a recording?</Text>
+                            <Text style={styles.answer}>Tap the play button on a saved recording.
+                                You can also pause and resume playback.</Text>
+                            <Text style={styles.question}> How do I rename or delete a recording? </Text>
+                            <Text style={styles.answer}>  Tap the three dots on a recording card and select Rename or Delete.</Text>
+                            <Text style={styles.question}>  How do I search for recordings?</Text>
+                            <Text style={styles.answer}>Tap the search icon on the home page  and enter the recording name.</Text>
+                            <Text style={styles.question}> Where are my recordings stored? </Text>
+                            <Text style={styles.answer}> Recordings are stored locally on your device and can be accessed offline.</Text>
+                        </ScrollView>
+                        <Pressable style={styles.closeButton} onPress={() => setShowHelpInformation(false)}>
+                            <Text style={styles.closeText}>Close</Text>
+                        </Pressable>
+                    </View>
+                </View>
+            </Modal>
             <BottomNavigation />
         </SafeAreaView>
     )
@@ -112,5 +147,53 @@ const styles = StyleSheet.create({
     separator: {
         height: 1,
         backgroundColor: '#EEEEEE'
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    modalContent: {
+        width: '90%',
+        maxWidth: 400,
+        maxHeight: '80%',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 15,
+        padding: 20,
+        gap: 20
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10
+    },
+    modalTitle: {
+        flex: 1,
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#000000'
+    },
+    question: {
+        fontSize: 15,
+        fontWeight: 'bold',
+        color: '#000000',
+        marginBottom: 6
+    },
+    answer: {
+        fontSize: 14,
+        color: '#717171',
+        lineHeight: 21,
+        marginBottom: 20
+    },
+    closeButton: {
+        backgroundColor: '#EF4C1D',
+        borderRadius: 9,
+        padding: 12,
+        alignItems: 'center'
+    },
+    closeText: {
+        color: '#FFFFFF',
+        fontSize: 15,
+        fontWeight: 'bold'
     }
 })
